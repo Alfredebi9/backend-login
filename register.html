@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+</head>
+<body>
+  <h1>Register</h1>
+  <form action="/users/register" id="registerForm">
+    <label for="name">Username:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br><br>
+    <button type="submit">Register</button>
+    <a href="/login" type="submit">Login</a>
+  </form>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const formData = {
+        name: document.getElementById("name").value,
+        password: document.getElementById("password").value
+      };
+
+      try {
+        const response = await fetch('/users/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          alert('Registration successful!');
+          window.location.href = '/'; // Redirect to homepage
+        } else {
+          alert('Registration failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Registration failed. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+</head>
+<body>
+  <h1>Welcome to Simple Authentication</h1>
+  <a href="/login">Login</a><br/>
+  <a href="/register">Register</a>
+  <button id="logoutButton">Logout</button>
+</body>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const logoutButton = document.getElementById("logoutButton");
+
+  logoutButton.addEventListener("click", function () {
+    fetch("/users/logout", {
+      method: "GET",
+      credentials: "same-origin"
+    })
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        console.error("Logout failed");
+      }
+    })
+    .catch(error => {
+      console.error("Logout failed:", error);
+    });
+  });
+});
+
+</script>
+</html>
