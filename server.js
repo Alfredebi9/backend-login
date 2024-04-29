@@ -1,3 +1,5 @@
+const dotenv = require('dotenv').config();
+const crypto = require('crypto');
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
@@ -8,15 +10,12 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
-  secret: 'secret',
+  secret: process.env.SESSION_SECRET || 'secret',
   resave: true,
   saveUninitialized: true
 }));
 
-mongoose.connect('mongodb://localhost:27017/mydatabase', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(process.env.MONGODB_URI);
 
 const db = mongoose.connection;
 
@@ -80,19 +79,22 @@ app.get('/users/logout', (req, res) => {
 
 app.get('/', (req, res) => {
   if (req.session.user) {
-    res.sendFile(path.join(__dirname, "homepage"));
+    res.sendFile(path.join(__dirname, "public", "homepage.html"));
   } else {
-    res.sendFile(path.join(__dirname, 'login'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
   }
 });
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'login'));
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'register'));
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
 });
+
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
